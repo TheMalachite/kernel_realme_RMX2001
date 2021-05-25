@@ -876,11 +876,6 @@ int oppo_chg_parse_charger_dt(struct oppo_chg_chip *chip)
         }
 
 /*-3~0 C*/
-		#ifdef CONFIG_HIGH_TEMP_VERSION
-        chg_err(" CONFIG_HIGH_TEMP_VERSION enable here,disable low tbat chg \n");
-        batt_cold_degree_negative = 170;
-        chip->limits.cold_bat_decidegc = -batt_cold_degree_negative;
-		#else
         chg_err(" CONFIG_HIGH_TEMP_VERSION disabled\n");
         rc = of_property_read_u32(node, "qcom,cold_bat_decidegc", &batt_cold_degree_negative);
         if (rc < 0) {
@@ -888,7 +883,6 @@ int oppo_chg_parse_charger_dt(struct oppo_chg_chip *chip)
         } else {
         		chip->limits.cold_bat_decidegc = -batt_cold_degree_negative;		
         }
-		#endif
 
         rc = of_property_read_u32(node, "qcom,temp_cold_vfloat_mv", &chip->limits.temp_cold_vfloat_mv);
         if (rc < 0) {
@@ -994,16 +988,11 @@ int oppo_chg_parse_charger_dt(struct oppo_chg_chip *chip)
         }
 
 /*>55 C*/
-		#ifdef CONFIG_HIGH_TEMP_VERSION
-            chg_err(" CONFIG_HIGH_TEMP_VERSION enable here,disable high tbat chg \n");
-			chip->limits.hot_bat_decidegc = 950;
-		#else
             chg_err(" CONFIG_HIGH_TEMP_VERSION disabled \n");
 			rc = of_property_read_u32(node, "qcom,hot_bat_decidegc", &chip->limits.hot_bat_decidegc);
 			if (rc < 0) {
 					chip->limits.hot_bat_decidegc = -EINVAL;
 			}
-		#endif
 
 /*offset temperature, only for userspace, default 0*/
         rc = of_property_read_u32(node, "qcom,offset_temp", &chip->offset_temp);
